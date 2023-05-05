@@ -22,13 +22,15 @@ planned features:
   - [ ] The button element needs to contain the text `Download`
 
 TODO:
-[ ] - Check out memegen.link api
-[ ] - figure out app structure - maybe make a sketch?
-[ ] - Make 2 Text Boxes for Top&Bottom Text
+[x] - Check out memegen.link api
+[x] - figure out app structure - maybe make a sketch?
+[x] - Make 2 Text Boxes for Top&Bottom Text
+[ ] - Implement the practices of Understanding Forms and Events in React tutorial into the INputForm Component
+[ ] - Read out the Form Input as Props
 [ ] - Make sure they are empty when the page loads
-[ ] - make preview image
+[x] - make preview image
 [ ] - design meme template selector
+[ ] -
+[ ] - transform template list into json and read
+[ ] -
 [ ] - design download button
-[ ] -
-[ ] -
-[ ] -
