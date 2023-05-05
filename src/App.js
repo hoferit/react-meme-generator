@@ -22,7 +22,7 @@ function downloadImage(imageUrl) {
 
 export default function App() {
   // set up state variables
-  const [template, setTemplate] = useState(templates[51].id);
+  const [template, setTemplate] = useState(templates[137].id);
   const [topText, setTopText] = useState('');
   const [bottomText, setBottomText] = useState('');
   const [imageUrl, setImageUrl] = useState(
@@ -35,14 +35,14 @@ export default function App() {
       setImageUrl(
         `https://api.memegen.link/images/${template}/${topText}/${bottomText}.png`,
       );
-      // then i run a .find array method(and transform spelling to lowercase) to find the template name.
+      // then i run a .find array method (and transform spelling to lowercase) to find the template name.
       const selectedTemplate = templates.find(
         (templateName) => templateName.id === template.toLowerCase(),
       );
       // if the template-name exists i set the useState variable to the found template id.
       if (selectedTemplate) {
         setTemplate(selectedTemplate.id);
-        // if not i display an error
+        // if not display an error
       } else {
         alert(`Template '${template}' not found!`);
       }
@@ -69,6 +69,16 @@ export default function App() {
           src={imageUrl}
           data-test-id="meme-image"
         />
+        <div className={styles.memeselector}>
+          <label>
+            Meme template
+            <input
+              value={template}
+              onChange={(event) => setTemplate(event.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+          </label>
+        </div>
         <form className={styles.textinputs} onSubmit={handleSubmit}>
           <div className={styles.textinput}>
             <label>
@@ -92,12 +102,6 @@ export default function App() {
           </div>
           <button data-test-id="generate-meme">Generate Meme</button>
         </form>
-        <div className={styles.memeselector}>
-          <label>
-            Meme template
-            <input value={template} onKeyDown={handleKeyDown} />
-          </label>
-        </div>
         <div className={styles.downloadbutton}>
           <button onClick={handleDownload}>Download</button>
         </div>
