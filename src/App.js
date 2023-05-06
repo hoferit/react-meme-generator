@@ -22,44 +22,42 @@ function downloadImage(imageUrl) {
 
 export default function App() {
   // set up state variables
-  const [template, setTemplate] = useState(templates[137].id);
+  const [template, setTemplate] = useState(templates[0].id);
   const [topText, setTopText] = useState('');
   const [bottomText, setBottomText] = useState('');
   const [imageUrl, setImageUrl] = useState(
-    'https://api.memegen.link/images/doge.png',
+    'https://api.memegen.link/images/aag.png',
   );
-  // Enter Key handling function for the template input field
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      // first i also set the image url, so it is independent of the 'submit text' button.
+  // handling the template input field, with if else block that prevents faulty url being loaded.
+  const handleTemplate = (event) => {
+    const selectedTemplate = event.target.value;
+    setTemplate(selectedTemplate);
+    if (!topText && !bottomText) {
+      setImageUrl(`https://api.memegen.link/images/${selectedTemplate.id}.png`);
+    } else {
+      setImageUrl(
+        `https://api.memegen.link/images/${selectedTemplate.id}/${topText}/${bottomText}.png`,
+      );
+    }
+  };
+
+  // handling the submit text button to update the imageUrl and same if else block as handleTemplate function
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!topText && !bottomText) {
+      setImageUrl(`https://api.memegen.link/images/${template}.png`);
+    } else {
       setImageUrl(
         `https://api.memegen.link/images/${template}/${topText}/${bottomText}.png`,
       );
-      // then i run a .find array method (and transform spelling to lowercase) to find the template name.
-      const selectedTemplate = templates.find(
-        (templateName) => templateName.id === template.toLowerCase(),
-      );
-      // if the template-name exists i set the useState variable to the found template id.
-      if (selectedTemplate) {
-        setTemplate(selectedTemplate.id);
-        // if not display an error
-      } else {
-        alert(`Template '${template}' not found!`);
-      }
     }
-  };
-  // handling the submit text button to update the imageUrl
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setImageUrl(
-      `https://api.memegen.link/images/${template}/${topText}/${bottomText}.png`,
-    );
   };
 
   // download click handler that creates an 'a' element,
   const handleDownload = () => {
     downloadImage(imageUrl);
   };
+
   return (
     <main>
       <section>
@@ -69,17 +67,13 @@ export default function App() {
           src={imageUrl}
           data-test-id="meme-image"
         />
-        <div className={styles.memeselector}>
-          <label>
-            Meme template
-            <input
-              value={template}
-              onChange={(event) => setTemplate(event.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-          </label>
-        </div>
         <form className={styles.textinputs} onSubmit={handleSubmit}>
+          <div className={styles.memeselector}>
+            <label>
+              Meme template
+              <input value={template} onChange={handleTemplate} />
+            </label>
+          </div>
           <div className={styles.textinput}>
             <label>
               Top Text
