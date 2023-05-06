@@ -76,7 +76,7 @@ export default function App() {
           </div>
           <div className={styles.textinput}>
             <label>
-              Top Text
+              Top text
               <input
                 value={topText}
                 onChange={(event) => setTopText(event.target.value)}
@@ -86,7 +86,7 @@ export default function App() {
           </div>
           <div className={styles.textinput}>
             <label>
-              Bottom Text{' '}
+              Bottom text
               <input
                 value={bottomText}
                 onChange={(event) => setBottomText(event.target.value)}
