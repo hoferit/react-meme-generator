@@ -19,6 +19,22 @@ function downloadImage(imageUrl) {
       console.error('There was an error downloading the image:', error);
     });
 }
+// function that corrects /?# and uses regular expressions to replace the characters
+function autoCorrect(text, correction) {
+  const reg = new RegExp(
+    Object.keys(correction)
+      .map((c) => '\\' + c)
+      .join('|'),
+    'g',
+  );
+  return text.replace(reg, (matched) => correction[matched]);
+}
+
+const correction = {
+  '#': '~h',
+  '/': '~s',
+  '?': '~q',
+};
 
 export default function App() {
   // set up state variables
@@ -31,12 +47,14 @@ export default function App() {
   // handling the template input field, with if else block that prevents faulty url being loaded.
   const handleTemplate = (event) => {
     const selectedTemplate = event.target.value;
+    const correctedTopText = autoCorrect(topText, correction);
+    const correctedBottomText = autoCorrect(bottomText, correction);
     setTemplate(selectedTemplate);
     if (!topText && !bottomText) {
       setImageUrl(`https://api.memegen.link/images/${selectedTemplate.id}.png`);
     } else {
       setImageUrl(
-        `https://api.memegen.link/images/${selectedTemplate.id}/${topText}/${bottomText}.png`,
+        `https://api.memegen.link/images/${selectedTemplate.id}/${correctedTopText}/${correctedBottomText}.png`,
       );
     }
   };
@@ -44,11 +62,13 @@ export default function App() {
   // handling the submit text button to update the imageUrl and same if else block as handleTemplate function
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!topText && !bottomText) {
+    const correctedTopText = autoCorrect(topText, correction);
+    const correctedBottomText = autoCorrect(bottomText, correction);
+    if (!correctedTopText && !correctedBottomText) {
       setImageUrl(`https://api.memegen.link/images/${template}.png`);
     } else {
       setImageUrl(
-        `https://api.memegen.link/images/${template}/${topText}/${bottomText}.png`,
+        `https://api.memegen.link/images/${template}/${correctedTopText}/${correctedBottomText}.png`,
       );
     }
   };
@@ -59,47 +79,58 @@ export default function App() {
   };
 
   return (
-    <main>
-      <section>
-        <img
-          className={styles.memepreview}
-          alt="meme preview"
-          src={imageUrl}
-          data-test-id="meme-image"
-        />
-        <form className={styles.textinputs} onSubmit={handleSubmit}>
-          <div className={styles.memeselector}>
-            <label>
-              Meme template
-              <input value={template} onChange={handleTemplate} />
-            </label>
-          </div>
-          <div className={styles.textinput}>
-            <label>
-              Top text
-              <input
-                value={topText}
-                onChange={(event) => setTopText(event.target.value)}
-                minLength={3}
-              />
-            </label>
-          </div>
-          <div className={styles.textinput}>
-            <label>
-              Bottom text
-              <input
-                value={bottomText}
-                onChange={(event) => setBottomText(event.target.value)}
-                minLength={3}
-              />
-            </label>
-          </div>
-          <button data-test-id="generate-meme">Generate Meme</button>
-        </form>
-        <div className={styles.downloadbutton}>
-          <button onClick={handleDownload}>Download</button>
-        </div>
-      </section>
-    </main>
+    <div className={styles.appbody}>
+      <main>
+        <section>
+          <form className={styles.textinputs} onSubmit={handleSubmit}>
+            <img
+              className={styles.memepreview}
+              alt="meme preview"
+              src={imageUrl}
+              data-test-id="meme-image"
+            />
+            <div className={styles.textinput}>
+              <label>
+                Meme template
+                <input value={template} onChange={handleTemplate} />
+              </label>
+            </div>
+            <div className={styles.descriptiontext}>
+              <p>
+                Type in the meme template of your choice!
+                <br />
+                Type in Top and Bottom Text and press generate
+                <br /> to create your own Meme. You can download the <br />{' '}
+                created image with the download button.
+              </p>
+            </div>
+            <div className={styles.textinput}>
+              <label>
+                Top text
+                <input
+                  value={topText}
+                  onChange={(event) => setTopText(event.target.value)}
+                  minLength={3}
+                />
+              </label>
+            </div>
+            <div className={styles.textinput}>
+              <label>
+                Bottom text
+                <input
+                  value={bottomText}
+                  onChange={(event) => setBottomText(event.target.value)}
+                  minLength={3}
+                />
+              </label>
+            </div>
+            <button data-test-id="generate-meme">Generate Meme</button>
+            <div className={styles.downloadbutton}>
+              <button onClick={handleDownload}>Download</button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
   );
 }
